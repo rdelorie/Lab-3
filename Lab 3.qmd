@@ -1,11 +1,69 @@
 ---
 title: "Lab 3"
+subtitle: ESS 330
+author: Rachel Delorie
+format: html
 ---
 
-## Quarto
+``` {r}
+# Setup
+library(tidyverse)
+library(flextable)
+library(zoo)
+covid_data = read_csv('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv')
+rename
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+txt <- "2022-01-01"
+class(txt)
+date_example <- as.Date(txt)
+class(date_example)
+
+my.date <- as.Date("2022-01-01")
+my.state <- "Colorado"
+```
+
+``` {r}
+# question 2
+colorado <- covid_data %>%
+  filter(state == my.state) %>% 
+  group_by(county) %>% 
+  arrange(date) %>% 
+  mutate(new_cases = cases - lag(cases), new_deaths = lag(deaths)) %>% 
+  ungroup()
+```
+
+``` {r}
+filter(colorado, date == my.date) %>%
+  slice_max(cases, n = 5) %>%
+  select(Date = date, Cases = cases, County = county) %>%
+  flextable() %>%
+  set_caption("Most Total Cases")
+```
 
 ```{r}
-1 + 1
+filter(colorado, date == my.date) %>% #my date and only colorado
+  slice_max (cases, n = 5) %>% 
+  select (Date = date, County = county, Cases = new_cases) %>% 
+  flextable() %>% 
+  set_caption(caption = "Most New Cases")
+```
+
+``` {r}
+# question 4
+```
+
+``` {r}
+# question 5
+```
+
+``` {r}
+# question 6
+```
+
+``` {r}
+# question 7
+```
+
+``` {r}
+# question 8
 ```
