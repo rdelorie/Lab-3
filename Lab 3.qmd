@@ -13,12 +13,12 @@ library(zoo)
 covid_data = read_csv('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv')
 rename
 
-txt <- "2022-01-01"
+txt <- "2022-02-01"
 class(txt)
 date_example <- as.Date(txt)
 class(date_example)
 
-my.date <- as.Date("2022-01-01")
+my.date <- as.Date("2022-02-01")
 my.state <- "Colorado"
 ```
 
@@ -38,9 +38,7 @@ filter(colorado, date == my.date) %>%
   select(Date = date, Cases = cases, County = county) %>%
   flextable() %>%
   set_caption("Most Total Cases")
-```
 
-```{r}
 filter(colorado, date == my.date) %>% #my date and only colorado
   slice_max (cases, n = 5) %>% 
   select (Date = date, County = county, Cases = new_cases) %>% 
@@ -48,22 +46,10 @@ filter(colorado, date == my.date) %>% #my date and only colorado
   set_caption(caption = "Most New Cases")
 ```
 
-``` {r}
-# question 4
+```{r}
+# question 3
+pop_url <- 'https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/counties/totals/co-est2023-alldata.csv'
+pop_data = read_csv(pop_url)  # supplemental population data
+as.character("STATE", "COUNTY")
 ```
 
-``` {r}
-# question 5
-```
-
-``` {r}
-# question 6
-```
-
-``` {r}
-# question 7
-```
-
-``` {r}
-# question 8
-```
