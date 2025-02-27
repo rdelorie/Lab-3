@@ -9,7 +9,9 @@ format: html
 # Setup
 library(tidyverse)
 library(flextable)
+library(dplyr)
 library(zoo)
+library(readr)
 covid_data = read_csv('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv')
 rename
 
@@ -48,8 +50,19 @@ filter(colorado, date == my.date) %>% #my date and only colorado
 
 ```{r}
 # question 3
-pop_url <- 'https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/counties/totals/co-est2023-alldata.csv'
-pop_data = read_csv(pop_url)  # supplemental population data
-as.character("STATE", "COUNTY")
+pop_data <- read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/counties/totals/co-est2023-alldata.csv")
+
+pop_data <- pop_data %>%
+as.character("STATE")
+as.character("COUNTY")
+
+pop_data %>% 
+  mutate(
+    STATE = sprintf("%02s", STATE),  # Ensure 2 leading
+     FIPS = sprintf("%02s%s", STATE, COUNTY))  %>%   # Create FIPS code by combining STATE and COUNTY
+
+pop_data %>%
+filter(matches("NAME|2021")) %>%
+  filter(COUNTY != "000") 
 ```
 
