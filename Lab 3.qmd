@@ -15,6 +15,7 @@ library(dplyr)
 library(zoo)
 library(readr)
 library(lubridate)
+library(ggplot2)
 covid_data = read_csv('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv')
 rename
 
@@ -130,7 +131,6 @@ print(paste("Counties with cases per 100k > 100:", watchlist_count))
 print(top_5_counties)
 # “More than 100 new cases per 100,000 residents over the past 14 days: Oldham, Wayne, York, Lyon, Benton
 ```
-
 ```{r}
 CO_death_analysis <- popandcovid %>%
   filter(state == "Colorado", year(date) == 2021) %>% 
@@ -141,3 +141,12 @@ CO_death_analysis <- popandcovid %>%
   
   mutate(percentcoviddeath = (deaths/DEATHS2021) *100) %>% 
   mutate(high_impact_ctys = (percentcoviddeath >= 20)) 
+
+# Plot
+ggplot(CO_death_analysis, aes(x = county, y = percentcoviddeath)) +
+  geom_col(fill = "darkred") +
+  labs(title = "Colorado Counties Where COVID-19 Caused >20% of Total Deaths in 2021",
+       x = "County",
+       y = "Percentage of Total Deaths Attributed to COVID") +
+  theme_minimal()
+```
