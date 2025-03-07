@@ -62,7 +62,6 @@ pop_data <- pop_data %>%
   select(matches("NAME|2021"), FIPS) %>%
   # Step 4: Remove state-level rows (where COUNTY == "000")
   filter("COUNTY" != "000") 
-=
 # exlpore the data
 names(pop_data)
 dim(pop_data)
@@ -117,12 +116,21 @@ newinlast14days <- popandcovid %>%
   summarize(sumofnewcases14d = sum(new_cases, na.rm = TRUE), population = first(POPESTIMATE2021)) %>% 
   
 mutate(casesper100k = (sumofnewcases14d/population) *100000)
+
 watchlist_count <- newinlast14days %>% 
   filter(casesper100k>100) %>% 
-  nrow() %>% 
-slice_max(order_by = casesper100k, n = 5)
-print(newinlast14days)
+  nrow()
 
-# “More than 100 new cases per 100,000 residents over the past 14 days: 
+top_5_counties <- newinlast14days %>% 
+slice_max(order_by = casesper100k, n = 5)
+
+print(newinlast14days)
+print(paste("Counties with cases per 100k > 100:", watchlist_count))
+print(top_5_counties)
+# “More than 100 new cases per 100,000 residents over the past 14 days: Oldham, Wayne, York, Lyon, Benton
+```
+
+```{r}
+
 ```
 
