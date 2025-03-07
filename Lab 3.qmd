@@ -5,6 +5,8 @@ author: Rachel Delorie
 format:
   html:
     self-contained: true
+    theme: flatly
+    fontsize: 12pt 
 ---
 
 ```{r}
@@ -131,6 +133,10 @@ print(paste("Counties with cases per 100k > 100:", watchlist_count))
 print(top_5_counties)
 # “More than 100 new cases per 100,000 residents over the past 14 days: Oldham, Wayne, York, Lyon, Benton
 ```
+
+```{r}
+```
+
 ```{r}
 CO_death_analysis <- popandcovid %>%
   filter(state == "Colorado", year(date) == 2021) %>% 
@@ -150,3 +156,37 @@ ggplot(CO_death_analysis, aes(x = county, y = percentcoviddeath)) +
        y = "Percentage of Total Deaths Attributed to COVID") +
   theme_minimal()
 ```
+
+```{r}
+#values aligned to the left or right
+rollmean(x, k = 3, fill - NA, align = "left")
+228
+229
+230
+231
+232
+rollmean(x, k = 3, fill = NA, align = "right")
+#Hint: You will need two group_by calls and the zoo:: rollmean
+233
+234
+235
+236
+function.
+state_covid = covid_data %>%
+group_by(date, state) %>%
+summarise cases = sum(cases)) %>%
+filter(state %in% ('New York', "Ohio", 'Colorado', "Alabama"))
+%>%
+237
+238
+239
+group_by(state) %>%
+mutate(newCases = cases - lag(cases),
+roll = z0o::rollmean(newCases, k = 7, align = "right", fill = zoo::rollmean(newCases, k = 7, align = "right", fill = NA)) %>% 
+  ungroup()
+```
+
+```{r}
+
+```
+
