@@ -131,7 +131,7 @@ print(top_5_counties)
 # “More than 100 new cases per 100,000 residents over the past 14 days: Oldham, Wayne, York, Lyon, Benton
 ```
 
-```{r}
+
 CO_death_analysis <- popandcovid %>%
   filter(state == "Colorado", year(date) == 2021) %>% 
   group_by(county) %>%
