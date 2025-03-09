@@ -135,9 +135,7 @@ print(top_5_counties)
 ```
 
 ```{r}
-```
-
-```{r}
+# question 5
 CO_death_analysis <- popandcovid %>%
   filter(state == "Colorado", year(date) == 2021) %>% 
   group_by(county) %>%
@@ -158,35 +156,82 @@ ggplot(CO_death_analysis, aes(x = county, y = percentcoviddeath)) +
 ```
 
 ```{r}
-#values aligned to the left or right
-rollmean(x, k = 3, fill - NA, align = "left")
-228
-229
-230
-231
-232
+#question 6
+x <- c(1, 2, 3, 4, 5, 6, 7)
+rollmean(x, k = 3, fill = NA, align = "left")
+
 rollmean(x, k = 3, fill = NA, align = "right")
-#Hint: You will need two group_by calls and the zoo:: rollmean
-233
-234
-235
-236
-function.
-state_covid = covid_data %>%
-group_by(date, state) %>%
-summarise cases = sum(cases)) %>%
-filter(state %in% ('New York', "Ohio", 'Colorado', "Alabama"))
-%>%
-237
-238
-239
-group_by(state) %>%
+
+state_covid = covid_data %>% 
+group_by(date, state) %>% 
+summarise(cases = sum(cases)) %>% 
+filter(state %in% c('New York', "Ohio", 'Colorado', "Alabama")) %>% 
+group_by(state) %>% 
 mutate(newCases = cases - lag(cases),
-roll = z0o::rollmean(newCases, k = 7, align = "right", fill = zoo::rollmean(newCases, k = 7, align = "right", fill = NA)) %>% 
+  roll = zoo::rollmean(newCases, k = 7, align = "right", fill = NA)) %>% 
+ungroup()
+```
+
+```{r}
+#plot data
+ggplot(data = state_covid, aes(x = date)) +
+  geom_col(aes(y = newCases), fill = "pink", col = NA) +
+  geom_line(aes(y = roll), col = "darkred", size = 1) +
+  theme_linedraw() +
+  facet_wrap(~state, nrow = 2, scales = "free_y") +
+  labs(title = "Cumulative COVID-19 Cases",
+       x = "Date", y = "Case Count")
+```
+
+```{r}
+pp <- pop_data %>% 
+  group_by(STNAME) %>% 
+  summarise(state_pop = sum(POPESTIMATE2021)) %>% 
+  inner_join(state_covid, by = c("STNAME"="state")) %>% 
+  mutate(perCap = newCases / state_pop) %>% 
+  group_by(STNAME) %>% 
+  mutate(roll = zoo::rollmean(perCap, k = 7, align = "right", fill = NA)) %>% 
   ungroup()
 ```
 
 ```{r}
-
+#plot
+ggplot(pp, aes(x = date)) +
+  geom_line(aes(y = roll, col = STNAME), size = 1) +
+  theme_linedraw() +
+  labs(title = "Cumulative COVID-19 Cases",
+       x = "Date", y = "Case Count")
 ```
+```{r}
+# Load county centroid data
+meta <- read_csv('https://raw.githubusercontent.com/mikejohnson51/csu-ess-330/refs/heads/main/resources/county-centroids.csv')
 
+# Merge COVID data with county centroids using FIPS code
+covid_data <- covid_data %>% 
+  mutate(fips = as.character(fips)) %>%
+  left_join(meta, by = "fips")
+
+# Calculate weighted mean center by date
+wmc_data <- covid_data %>% 
+  filter(!is.na(LON) & !is.na(LAT)) %>%  # Remove missing locations
+  group_by(date) %>% 
+  summarise(
+    wmX_c = sum(LON * cases, na.rm = TRUE) / sum(cases, na.rm = TRUE),
+    wmY_c = sum(LAT * cases, na.rm = TRUE) / sum(cases, na.rm = TRUE),
+    total_cases = sum(cases, na.rm = TRUE),
+    month = format(as.Date(date), "%m")
+  ) %>% 
+  ungroup()
+
+# Load US states map data
+us_states <- map_data("state")
+
+# Plot weighted mean center movement over time
+wmc_plot <- ggplot() +
+  geom_polygon(data = us_states, aes(x = long, y = lat, group = group), fill = "white", color = "black") +
+  geom_point(data = wmc_data, aes(x = wmX_c, y = wmY_c, color = month, size = total_cases), alpha = 0.7) +
+  scale_color_viridis_d() +
+  labs(title = "Weighted Mean Center of COVID-19 Cases in the USA",
+       x = "Longitude", y = "Latitude", color = "Month", size = "Total Cases") +
+  theme_minimal()
+```
