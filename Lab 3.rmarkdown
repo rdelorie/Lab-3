@@ -202,6 +202,7 @@ ggplot(pp, aes(x = date)) +
   labs(title = "Cumulative COVID-19 Cases",
        x = "Date", y = "Case Count")
 ```
+
 ```{r}
 # Load county centroid data
 meta <- read_csv('https://raw.githubusercontent.com/mikejohnson51/csu-ess-330/refs/heads/main/resources/county-centroids.csv')
