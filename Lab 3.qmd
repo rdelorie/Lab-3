@@ -2,11 +2,9 @@
 title: "Lab 3"
 subtitle: ESS 330
 author: Rachel Delorie
-format:
-  html:
-    self-contained: true
-    theme: flatly
-    fontsize: 12pt 
+format: html
+execute:
+  echo: true
 ---
 
 ```{r}
