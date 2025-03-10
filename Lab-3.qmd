@@ -2,6 +2,7 @@
 title: "Lab 3"
 subtitle: ESS 330
 author: Rachel Delorie
+output-dir: docs
 format: html
 execute:
   echo: true
